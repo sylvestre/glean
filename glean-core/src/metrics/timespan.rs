@@ -11,6 +11,7 @@ use crate::metrics::time_unit::TimeUnit;
 use crate::metrics::Metric;
 use crate::metrics::MetricType;
 use crate::storage::StorageManager;
+use crate::util::precise_time_ns;
 use crate::CommonMetricData;
 use crate::Glean;
 
@@ -56,7 +57,7 @@ impl TimespanMetric {
     /// [`set_stop`](TimespanMetric::set_stop)): in that case the original start
     /// time will be preserved.
     pub fn start(&self) {
-        let start_time = time::precise_time_ns();
+        let start_time = precise_time_ns();
 
         let metric = self.clone();
         crate::launch_with_glean(move |glean| metric.set_start(glean, start_time));
@@ -88,7 +89,7 @@ impl TimespanMetric {
     ///
     /// This will record an error if no [`set_start`](TimespanMetric::set_start) was called.
     pub fn stop(&self) {
-        let stop_time = time::precise_time_ns();
+        let stop_time = precise_time_ns();
 
         let metric = self.clone();
         crate::launch_with_glean(move |glean| metric.set_stop(glean, stop_time));

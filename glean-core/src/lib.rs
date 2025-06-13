@@ -78,6 +78,7 @@ pub use crate::metrics::{
     TimespanMetric, TimingDistributionMetric, UrlMetric, UuidMetric,
 };
 pub use crate::upload::{PingRequest, PingUploadTask, UploadResult, UploadTaskAction};
+use crate::util::precise_time_ns;
 
 const GLEAN_VERSION: &str = env!("CARGO_PKG_VERSION");
 const GLEAN_SCHEMA_VERSION: u32 = 1;
@@ -619,7 +620,7 @@ fn uploader_shutdown() {
     //   * We don't know how long uploads take until we get data from bug 1814592.
     let result = rx.recv_timeout(Duration::from_secs(30));
 
-    let stop_time = time::precise_time_ns();
+    let stop_time = precise_time_ns();
     core::with_glean(|glean| {
         glean
             .additional_metrics
@@ -695,7 +696,7 @@ pub fn shutdown() {
     let blocked = dispatcher::block_on_queue_timeout(Duration::from_secs(10));
 
     // Always record the dispatcher wait, regardless of the timeout.
-    let stop_time = time::precise_time_ns();
+    let stop_time = precise_time_ns();
     core::with_glean(|glean| {
         glean
             .additional_metrics

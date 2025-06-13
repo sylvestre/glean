@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+use std::time::{SystemTime, UNIX_EPOCH};
+
 use chrono::{DateTime, FixedOffset, Local};
 
 use crate::common_metric_data::CommonMetricDataInternal;
@@ -42,6 +44,18 @@ pub fn sanitize_application_id(application_id: &str) -> String {
 /// A string representing the provided date/time truncated to the requested time unit.
 pub fn get_iso_time_string(datetime: DateTime<FixedOffset>, truncate_to: TimeUnit) -> String {
     datetime.format(truncate_to.format_pattern()).to_string()
+}
+
+/// Returns the current system time as nanoseconds since the Unix epoch.
+///
+/// # Returns
+///
+/// A `u64` representing the number of nanoseconds elapsed since the Unix epoch.
+pub fn precise_time_ns() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos() as u64
 }
 
 /// Get the current date & time with a fixed-offset timezone.

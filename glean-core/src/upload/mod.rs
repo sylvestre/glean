@@ -26,6 +26,7 @@ use malloc_size_of::MallocSizeOf;
 use malloc_size_of_derive::MallocSizeOf;
 
 use crate::error::ErrorKind;
+use crate::util::precise_time_ns;
 use crate::TimerId;
 use crate::{internal_metrics::UploadMetrics, Glean};
 pub use directory::process_metadata;
@@ -760,7 +761,7 @@ impl PingUploadManager {
     ) -> UploadTaskAction {
         use UploadResult::*;
 
-        let stop_time = time::precise_time_ns();
+        let stop_time = precise_time_ns();
 
         if let Some(label) = status.get_label() {
             let metric = self.upload_metrics.ping_upload_failure.get(label);
